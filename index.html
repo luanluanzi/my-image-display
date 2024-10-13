@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click Image to Take Photo</title>
+    <title>Click Image to Take Photo and Replace</title>
     <style>
         .clickable-image {
             cursor: pointer;
-            width: 200px; /* 控制图片的大小 */
+            width: 200px; /* 控制点击图片的大小 */
         }
-        .normal-image {
-            width: 200px; /* 控制普通图片的大小 */
-            margin-bottom: 10px; /* 给普通图片和可点击图片之间留点空间 */
+        #topImage {
+            width: 300px; /* 上方图片的大小 */
+            margin-bottom: 20px; /* 给上下两张图片留出间隔 */
         }
     </style>
 </head>
@@ -19,11 +19,11 @@
 
 <h2>Click the image to take a photo:</h2>
 
-<!-- 普通图片 -->
-<img src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" alt="Normal Image" class="normal-image">
+<!-- 上方图片，拍照后将替换此图片 -->
+<img src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" id="topImage">
 
 <!-- 点击可触发拍照的图片 -->
-<img src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" alt="Click to Take a Photo" class="clickable-image" onclick="triggerCamera()">
+<img src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" alt="Click to Take a Photo" class="clickable-image" id="bottomImage" onclick="triggerCamera()">
 
 <!-- 隐藏的文件输入 -->
 <input type="file" id="cameraInput" accept="image/*" capture="camera" style="display: none;">
@@ -37,10 +37,24 @@
     // 监听拍照完成的事件
     document.getElementById('cameraInput').addEventListener('change', function(event) {
         if (event.target.files.length > 0) {
-            // 获取到的照片文件
             const file = event.target.files[0];
-            alert('Photo taken: ' + file.name);
-            // 你可以在这里处理文件，例如上传到服务器或者显示在页面上
+            const reader = new FileReader();
+
+            // 当文件读取完成时，替换上方图片的 src
+            reader.onload = function(e) {
+                const topImage = document.getElementById('topImage');
+                topImage.src = e.target.result; // 将拍照后的图片替换上方图片
+                
+                // 替换下方图片为另一张可点击的图片，并设置点击事件跳转到第二页
+                const bottomImage = document.getElementById('bottomImage');
+                bottomImage.src = "https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png"; // 替换为新的可点击图片
+                bottomImage.onclick = function() {
+                    window.location.href = "second-page.html"; // 跳转到第二页
+                };
+            }
+
+            // 读取文件并转换为数据 URL
+            reader.readAsDataURL(file);
         }
     });
 </script>
