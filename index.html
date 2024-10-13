@@ -7,5 +7,28 @@
 </head>
 <body>
     <img src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" alt="Displayed Image">
+    <!-- 图片 -->
+<img src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" alt="Click to Take a Photo" class="clickable-image" onclick="triggerCamera()">
+
+<!-- 隐藏的文件输入 -->
+<input type="file" id="cameraInput" accept="image/*" capture="camera" style="display: none;">
+
+<script>
+    // 当点击图片时触发文件输入（拍照）
+    function triggerCamera() {
+        document.getElementById('cameraInput').click();
+    }
+
+    // 监听拍照完成的事件
+    document.getElementById('cameraInput').addEventListener('change', function(event) {
+        if (event.target.files.length > 0) {
+            // 获取到的照片文件
+            const file = event.target.files[0];
+            alert('Photo taken: ' + file.name);
+            // 你可以在这里处理文件，例如上传到服务器或者显示在页面上
+        }
+    });
+</script>
+    
 </body>
 </html>
