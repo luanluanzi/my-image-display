@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click Image to Take Photo and Replace</title>
     <style>
+         body {
+            font-family: Arial, sans-serif;
+            text-align: center; /* 居中对齐内容 */
+        }
         .clickable-image {
             cursor: pointer;
-            width: 400px; /* 控制点击图片的大小 */
+            width: 300px; /* 控制点击图片的大小 */
         }
         #topImage {
             width: 300px; /* 上方图片的大小 */
@@ -17,7 +21,6 @@
 </head>
 <body>
 
-<h2>Click the button to take a photo:</h2>
 
 <!-- 上方图片，拍照后将替换此图片 -->
 <img src="https://s3.bmp.ovh/imgs/2024/10/13/9f68f000aca37385.png" id="topImage">
