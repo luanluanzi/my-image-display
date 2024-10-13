@@ -3,41 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Input Information</title>
+    <title>Second Page with Input and Image</title>
     <style>
         body {
             font-family: Arial, sans-serif;
         }
-        .input-container {
+        .container {
             position: relative;
-            width: 300px;
-            margin: 100px auto;
+            width: 300px; /* 控制图片和输入框的宽度 */
+            margin: 0 auto; /* 居中容器 */
         }
-        input[type="text"] {
-            width: 100%;
+        #inputField {
+            position: absolute;
+            top: 20px; /* 控制输入框的位置，调整为图片的上方 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%; /* 控制输入框的宽度 */
             padding: 10px;
-            padding-right: 50px; /* 给图片预留空间 */
+            border: 2px solid #ccc;
+            border-radius: 5px;
             font-size: 16px;
         }
-        .input-background-image {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            width: 40px; /* 控制图片大小 */
-            height: 40px;
+        #imageBelowInput {
+            width: 100%; /* 图片宽度与容器一致 */
+        }
+        .clickable-image {
+            cursor: pointer;
+            width: 200px; /* 控制点击图片的大小 */
+            margin-top: 20px; /* 图片与输入框的间距 */
         }
     </style>
 </head>
 <body>
 
-<h2>Please enter some information:</h2>
+<h2>Enter your name:</h2>
 
-<div class="input-container">
-    <input type="text" placeholder="Enter your information here">
-    <!-- 在输入框后部显示的图片 -->
-    <img src="https://s3.bmp.ovh/imgs/2024/10/13/2891f404ab560b10.png" alt="Background Image" class="input-background-image">
+<!-- 图片上方的输入框 -->
+<div class="container">
+    <!-- 这是输入框 -->
+    <input type="text" id="inputField" placeholder="Enter your name here">
+    
+    <!-- 这是在输入框下面的图片 -->
+    <img src="https://s3.bmp.ovh/imgs/2024/10/13/0099c193ebe43e23.png" alt="Image Below Input" id="imageBelowInput">
 </div>
+
+<!-- 点击图片跳转到第三页 -->
+<img src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" class="clickable-image" onclick="goToThirdPage()">
+
+<script>
+    // 点击图片后跳转到第三页
+    function goToThirdPage() {
+        window.location.href = "third-page.html"; // 跳转到第三页
+    }
+</script>
 
 </body>
 </html>
