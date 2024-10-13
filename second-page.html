@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Information</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .input-container {
+            position: relative;
+            width: 300px;
+            margin: 100px auto;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            padding-right: 50px; /* 给图片预留空间 */
+            font-size: 16px;
+        }
+        .input-background-image {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            width: 40px; /* 控制图片大小 */
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Please enter some information:</h2>
+
+<div class="input-container">
+    <input type="text" placeholder="Enter your information here">
+    <!-- 在输入框后部显示的图片 -->
+    <img src="https://s3.bmp.ovh/imgs/2024/10/13/2891f404ab560b10.png" alt="Background Image" class="input-background-image">
+</div>
+
+</body>
+</html>
