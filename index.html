@@ -89,14 +89,17 @@
             loadingDiv.style.display = "block";
             recognizedTextDiv.innerHTML = ""; // 清空之前的文字
 
-            // 使用 Tesseract.js 进行 OCR 识别，识别英文
+            // 使用 Tesseract.js 进行 OCR 识别，识别英文和手写字符
             Tesseract.recognize(
                 e.target.result,
-                'eng',  // 使用英文模型
+                'eng+latin',  // 使用英文和手写英文模型
                 {
                     logger: (m) => console.log(m),
                     tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // 只识别英文字符和数字
                     preserve_interword_spaces: true, // 保持单词间的空格
+                    // 使用自定义配置增强对手写文本的识别
+                    pageSegMode: Tesseract.PSM.AUTO,  // 自动页面分割模式
+                    textLines: true
                 }
             ).then(({ data: { text } }) => {
                 // 隐藏加载状态
@@ -104,9 +107,6 @@
 
                 // 显示识别的文字
                 recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
-
-                // 保存识别的文字到 localStorage
-                localStorage.setItem('ocrContent', text);
 
                 // 替换上传图片按钮为新的按钮
                 nextPageButton.style.display = "block";  // 显示跳转按钮
