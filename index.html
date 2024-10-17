@@ -6,19 +6,31 @@
     <title>上传并识别文字</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
     <style>
-        /* 确保文字不会被挤压 */
         #recognizedText {
             margin-top: 20px;
             white-space: pre-wrap; /* 保持文本格式 */
             word-wrap: break-word;
         }
 
-        /* 显示加载状态 */
         #loading {
             display: none;
             font-size: 18px;
             color: #007BFF;
             margin-top: 10px;
+        }
+
+        .button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
@@ -44,13 +56,17 @@
 <!-- 加载状态 -->
 <div id="loading">识别中，请稍等...</div>
 
+<!-- 重新上传按钮 -->
+<button id="retryButton" class="button" style="display:none;">重新上传图片</button>
+
 <script>
     const imageInput = document.getElementById('imageInput');
     const image1 = document.getElementById('image1');
     const image2 = document.getElementById('image2');
     const newImage2 = document.getElementById('newImage2');
     const recognizedTextDiv = document.getElementById('recognizedText');
-    const loadingDiv = document.getElementById('loading'); // 加载状态元素
+    const loadingDiv = document.getElementById('loading');
+    const retryButton = document.getElementById('retryButton');
 
     // 点击图片2触发上传图片
     image2.addEventListener('click', function() {
@@ -72,6 +88,7 @@
 
             // 显示加载状态
             loadingDiv.style.display = 'block';
+            retryButton.style.display = 'none'; // 隐藏重新上传按钮
 
             // 进行文字识别
             Tesseract.recognize(
@@ -87,6 +104,7 @@
                 // 显示识别的文字
                 if (text.trim() === '') {
                     recognizedTextDiv.innerHTML = `<h3>识别结果：</h3><p>未能识别出文字，请尝试清晰的图片。</p>`;
+                    retryButton.style.display = 'block'; // 显示重新上传按钮
                 } else {
                     recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
                 }
@@ -94,6 +112,7 @@
                 // 错误处理
                 loadingDiv.style.display = 'none';
                 recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
+                retryButton.style.display = 'block'; // 显示重新上传按钮
                 console.error(err);
             });
         };
@@ -106,6 +125,15 @@
     // 点击新的图片2按钮跳转到页面3
     newImage2.addEventListener('click', function() {
         window.location.href = 'third-page.html';  // 跳转到页面3
+    });
+
+    // 重新上传图片按钮
+    retryButton.addEventListener('click', function() {
+        recognizedTextDiv.innerHTML = ''; // 清空已识别的文字
+        imageInput.value = ''; // 清空文件选择框
+        image2.style.display = 'block'; // 恢复原图片2
+        newImage2.style.display = 'none'; // 隐藏新的图片2
+        retryButton.style.display = 'none'; // 隐藏重新上传按钮
     });
 </script>
 
