@@ -50,4 +50,15 @@
     // 点击图片后跳转到第三页
     function goToThirdPage() {
         // 获取输入框中的内容
-       
+        const inputValue = document.getElementById('inputField').value;
+
+        // 将输入框内容保存到 localStorage
+        localStorage.setItem('userName', inputValue);
+
+        // 跳转到第三页
+        window.location.href = 'third-page.html';
+    }
+</script>
+
+</body>
+</html>
