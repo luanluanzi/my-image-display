@@ -37,6 +37,10 @@
     <!-- 图片和文字将动态加载到这里 -->
 </div>
 
+<div id="inputTextContainer">
+    <!-- 页面2的输入框内容和OCR内容显示的位置 -->
+</div>
+
 <script>
     // 获取页面1选择的按钮索引、页面2输入的内容以及OCR识别内容
     const selectedButtonIndex = localStorage.getItem('selectedButtonIndex');
@@ -92,6 +96,10 @@
         // 默认显示第一个图片
         showImage('1');
     }
+
+    // 显示页面2的输入内容和OCR内容
+    const inputTextContainer = document.getElementById('inputTextContainer');
+    inputTextContainer.innerHTML = `<p><strong>输入的内容：</strong>${inputText}</p><p><strong>OCR识别的内容：</strong>${ocrContent}</p>`;
 </script>
 
 </body>
