@@ -3,72 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拍摄照片并跳转</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
+    <title>上传并识别文字</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
 </head>
 <body>
 
-<h1>拍摄或上传图片并识别英文文字</h1>
+<h2>图片上传和文字识别</h2>
 
-<!-- 普通图片显示 -->
-<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" height="300" alt="普通图片"/>
+<!-- 图片1，初始显示 -->
+<img id="image1" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300"  alt="图片1" />
 
-<!-- 可点击图片，拍照并进行OCR -->
-<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" alt="点击拍照" style="cursor:pointer;"/>
+<!-- 图片2，点击上传图片 -->
+<img id="image2" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="图片2" style="cursor:pointer;" />
 
-<!-- 上传图片按钮 -->
-<input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;"/>
+<!-- 文件上传输入框 -->
+<input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;" />
 
-<!-- 初始的按钮图片，点击后跳转的按钮 -->
-<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" alt="占位按钮" style="display:none; cursor:pointer;"/>
+<!-- 新的图片2（上传后替换） -->
+<img id="newImage2" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300" height="100" alt="点击跳转按钮" style="display:none; cursor:pointer;" />
+
+<!-- 识别出的文字 -->
+<div id="recognizedText"></div>
 
 <script>
     const imageInput = document.getElementById('imageInput');
-    const clickableImage = document.getElementById('clickableImage');
-    const staticImage = document.getElementById('staticImage');
-    const nextPageButton = document.getElementById('nextPageButton');
+    const image1 = document.getElementById('image1');
+    const image2 = document.getElementById('image2');
+    const newImage2 = document.getElementById('newImage2');
+    const recognizedTextDiv = document.getElementById('recognizedText');
 
-    // 点击可点击的图片触发拍照/上传
-    clickableImage.addEventListener('click', function() {
+    // 点击图片2触发上传图片
+    image2.addEventListener('click', function() {
         imageInput.click();
     });
 
-    // 当选择图片后，显示预览并进行OCR识别
+    // 上传图片后更新图片1和图片2
     imageInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
 
         reader.onload = function(e) {
-            // 显示上传的图片
-            staticImage.src = e.target.result;
-            staticImage.style.display = "block";
+            // 替换图片1为上传的图片
+            image1.src = e.target.result;
 
-            // 使用 Tesseract.js 进行 OCR 识别，识别英文
+            // 替换图片2为新的可点击按钮
+            image2.style.display = 'none'; // 隐藏原图片2
+            newImage2.style.display = 'block'; // 显示新的图片2
+
+            // 进行文字识别
             Tesseract.recognize(
                 e.target.result,
-                'eng',  // 使用英文模型
+                'eng', // 识别英文
                 {
-                    logger: (m) => console.log(m)
+                    logger: (m) => console.log(m) // 可以在控制台查看进度
                 }
             ).then(({ data: { text } }) => {
-                console.log('识别结果:', text); // 输出识别的英文文字
-
-                // 替换上传图片按钮为新的按钮
-                nextPageButton.src = 'https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png';  // 替换为新的按钮图片
-                nextPageButton.style.display = "block";  // 显示按钮
-            }).catch(err => {
-                console.error('识别失败:', err);
+                // 显示识别的文字
+                recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
             });
         };
 
         if (file) {
-            reader.readAsDataURL(file);  // 读取图片为Data URL
+            reader.readAsDataURL(file);  // 读取上传的图片文件
         }
     });
 
-    // 点击更换后的按钮跳转到第二个页面
-    nextPageButton.addEventListener('click', function() {
-        window.location.href = 'second-page.html';  // 跳转到第二个页面
+    // 点击新的图片2按钮跳转到页面3
+    newImage2.addEventListener('click', function() {
+        window.location.href = 'third-page.html';  // 跳转到页面3
     });
 </script>
 
