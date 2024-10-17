@@ -105,6 +105,9 @@
                 // 显示识别的文字
                 recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
 
+                // 保存识别的文字到 localStorage
+                localStorage.setItem('ocrContent', text);
+
                 // 替换上传图片按钮为新的按钮
                 nextPageButton.style.display = "block";  // 显示跳转按钮
             }).catch(err => {
