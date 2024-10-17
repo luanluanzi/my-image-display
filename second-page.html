@@ -7,42 +7,39 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center; /* 居中对齐内容 */
+            text-align: center;
         }
         .container {
             position: relative;
-            width: 300px; /* 控制图片和输入框的宽度 */
-            margin: 0 auto; /* 居中容器 */
+            width: 300px;
+            margin: 0 auto;
         }
         #inputField {
             position: absolute;
-            top: 150px; /* 控制输入框的位置，调整为图片的上方 */
+            top: 150px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60%; /* 控制输入框的宽度 */
+            width: 60%;
             padding: 10px;
             border: 2px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
         }
         #imageBelowInput {
-            width: 100%; /* 图片宽度与容器一致 */
+            width: 100%;
         }
         .clickable-image {
             cursor: pointer;
-            width: 300px; /* 控制点击图片的大小 */
-            margin-top: 20px; /* 图片与输入框的间距 */
+            width: 300px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<!-- 图片上方的输入框 -->
+<!-- 输入框 -->
 <div class="container">
-    <!-- 这是输入框 -->
     <input type="text" id="inputField" placeholder="Enter your name here">
-    
-    <!-- 这是在输入框下面的图片 -->
     <img src="https://s3.bmp.ovh/imgs/2024/10/13/0099c193ebe43e23.png" alt="Image Below Input" id="imageBelowInput">
 </div>
 
@@ -58,11 +55,10 @@
         // 将输入框的内容存储到 localStorage
         localStorage.setItem('inputContent', inputValue);
 
-        // 获取第一页识别的文字内容
+        // 获取OCR内容（假设已经存储在localStorage中）
         const ocrContent = localStorage.getItem('ocrContent');
         if (ocrContent) {
-            // 将 OCR 内容存储到 localStorage
-            localStorage.setItem('ocrContent', ocrContent);
+            localStorage.setItem('ocrContent', ocrContent); // 确保OCR内容传递
         }
 
         // 跳转到第三页
