@@ -16,12 +16,11 @@
         }
         .text-overlay {
             position: absolute;
-            top: 50%;
+            top: 20%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 24px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
+            font-size: 40px;
+            color: black;
             padding: 10px;
             border-radius: 5px;
         }
@@ -49,7 +48,7 @@
     const selectedButtonIndex = localStorage.getItem('selectedButtonIndex') || '0';
 
     // 显示页面2的输入和页面1的选择文本
-    document.getElementById('displayText').textContent = `${userName} - ${selectedText}`;
+    document.getElementById('displayText').textContent = `${userName}`;
 
     // 根据按钮选择的索引显示对应的背景图片
     const backgroundImage = document.getElementById('backgroundImage');
