@@ -40,11 +40,8 @@
 
 <script>
     // 从 localStorage 获取输入的用户名（页面2的输入内容）
-    const userName = localStorage.getItem('inputContent') || 'Unnamed';
-
-    // 从 localStorage 获取选择的按钮文本（页面1的按钮选择内容）
-    const selectedText = localStorage.getItem('ocrContent') || 'No text selected';
-
+    const userName = localStorage.getItem('inputField') || 'Unnamed';
+    
     // 从 localStorage 获取页面1选择的按钮索引
     const selectedButtonIndex = localStorage.getItem('selectedButtonIndex') || '0';
 
