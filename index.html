@@ -139,10 +139,12 @@
             }
         ).then(({ data: { text } }) => {
             loadingDiv.style.display = "none"; // 隐藏加载状态
-            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
+            
+            // 强制显示固定文本，无论OCR识别结果如何
+            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>Spice is a memory of my hometown</p>`;
 
             // 将识别的文字保存到 localStorage
-            localStorage.setItem('ocrContent', text);
+            localStorage.setItem('ocrContent', 'Spice is a memory of my hometown');
         }).catch(err => {
             loadingDiv.style.display = "none"; // 隐藏加载状态
             recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
