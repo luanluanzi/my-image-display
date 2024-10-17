@@ -3,25 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>识别结果展示</title>
+    <title>识别结果页面</title>
 </head>
 <body>
 
-<h1>识别的文字内容</h1>
+<h2>识别结果</h2>
 
-<!-- 这里显示从第一页面传递过来的识别结果 -->
-<p id="resultText">识别结果加载中...</p>
+<!-- 显示识别的文字 -->
+<div id="recognizedTextDisplay"></div>
 
 <script>
-    // 从 localStorage 获取识别的文字并显示
-    const resultText = document.getElementById('resultText');
+    // 假设你将识别的文字存储在 localStorage 中
     const recognizedText = localStorage.getItem('recognizedText');
-
-    if (recognizedText) {
-        resultText.textContent = recognizedText;
-    } else {
-        resultText.textContent = '无法获取识别结果。';
-    }
+    document.getElementById('recognizedTextDisplay').innerHTML = `<p>${recognizedText}</p>`;
 </script>
 
 </body>
