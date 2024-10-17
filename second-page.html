@@ -50,27 +50,4 @@
     // 点击图片后跳转到第三页
     function goToThirdPage() {
         // 获取输入框中的内容
-        const inputValue = document.getElementById('inputField').value;
-
-        // 将输入框的内容存储到 localStorage
-        localStorage.setItem('inputContent', inputValue);
-
-        // 获取OCR内容（假设已经存储在localStorage中）
-        const ocrContent = localStorage.getItem('ocrContent');
-        if (ocrContent) {
-            localStorage.setItem('ocrContent', ocrContent); // 确保OCR内容传递
-        }
-
-        // 获取页面1选择的按钮索引（假设页面1存储了按钮选择的信息）
-        const selectedButtonIndex = localStorage.getItem('selectedButtonIndex');
-        if (selectedButtonIndex) {
-            localStorage.setItem('selectedButtonIndex', selectedButtonIndex);
-        }
-
-        // 跳转到第三页
-        window.location.href = "third-page.html"; 
-    }
-</script>
-
-</body>
-</html>
+       
