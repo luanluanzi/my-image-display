@@ -58,9 +58,12 @@
         // 将输入框的内容存储到 localStorage
         localStorage.setItem('inputContent', inputValue);
 
-        // 将第一页识别的文字内容（假设已经保存到 localStorage）传递到第三页
+        // 获取第一页识别的文字内容
         const ocrContent = localStorage.getItem('ocrContent');
-        localStorage.setItem('ocrContent', ocrContent); // 确保 OCR 内容传递
+        if (ocrContent) {
+            // 将 OCR 内容存储到 localStorage
+            localStorage.setItem('ocrContent', ocrContent);
+        }
 
         // 跳转到第三页
         window.location.href = "third-page.html"; 
