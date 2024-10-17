@@ -3,51 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>第三页 - 显示信息</title>
+    <title>Display OCR and Input Content</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            text-align: center; /* 居中对齐内容 */
+            margin-top: 50px;
         }
-
+        .container {
+            width: 80%; /* 容器宽度 */
+            margin: 0 auto; /* 居中容器 */
+        }
+        .content-box {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
         h2 {
-            color: #2c3e50;
+            color: #007BFF;
         }
-
-        .content {
-            margin-top: 20px;
-        }
-
-        .content h3 {
-            color: #16a085;
-        }
-
-        .content p {
+        .text-content {
             font-size: 18px;
-            color: #34495e;
+            white-space: pre-wrap; /* 保持换行 */
+            word-wrap: break-word; /* 长单词换行 */
         }
     </style>
 </head>
 <body>
 
-<h2>第三页 - 显示来自第二页和第一页的内容</h2>
+<h1>Displaying OCR and Input Content</h1>
 
-<div class="content">
-    <h3>第二页输入框获取的内容：</h3>
-    <p id="inputContent">加载中...</p> <!-- 第二页输入框的内容 -->
+<!-- 显示OCR识别内容 -->
+<div class="container">
+    <div class="content-box">
+        <h2>OCR Recognized Text:</h2>
+        <p id="ocrText" class="text-content"></p>
+    </div>
 
-    <h3>第一页识别的文字：</h3>
-    <p id="ocrContent">加载中...</p> <!-- 第一个页面识别的文字 -->
+    <!-- 显示第二个页面输入的内容 -->
+    <div class="content-box">
+        <h2>Your Input:</h2>
+        <p id="userInput" class="text-content"></p>
+    </div>
 </div>
 
 <script>
-    // 获取从 localStorage 中存储的数据
-    const inputContent = localStorage.getItem('inputContent');  // 第二页输入框的内容
-    const ocrContent = localStorage.getItem('ocrContent');  // 第一个页面识别的文字
+    // 获取存储在localStorage中的OCR识别内容和用户输入内容
+    const ocrContent = localStorage.getItem('ocrContent');
+    const userInput = localStorage.getItem('inputContent');
 
-    // 在页面中显示内容
-    document.getElementById('inputContent').innerHTML = inputContent || '没有输入内容';
-    document.getElementById('ocrContent').innerHTML = ocrContent || '没有识别到文字';
+    // 显示OCR内容
+    if (ocrContent) {
+        document.getElementById('ocrText').innerText = ocrContent;
+    } else {
+        document.getElementById('ocrText').innerText = "No OCR content available.";
+    }
+
+    // 显示用户输入的内容
+    if (userInput) {
+        document.getElementById('userInput').innerText = userInput;
+    } else {
+        document.getElementById('userInput').innerText = "No input provided.";
+    }
 </script>
 
 </body>
