@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your chili label</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center; /* 居中对齐内容 */
-            padding: 20px;
-        }
-        #imageOnThirdPage {
-            width: 300px; /* 控制图片的大小 */
-            margin-top: 20px; /* 图片与标题的间距 */
-        }
-    </style>
+    <title>识别结果展示</title>
 </head>
 <body>
 
-<h2>This is your chili label:</h2>
+<h1>识别的文字内容</h1>
 
-<!-- 在页面上显示的图片 -->
-<img src="https://s3.bmp.ovh/imgs/2024/10/13/5300b61fe2b91cc0.png" alt="Image on Third Page" id="imageOnThirdPage">
+<!-- 这里显示从第一页面传递过来的识别结果 -->
+<p id="resultText">识别结果加载中...</p>
+
+<script>
+    // 从 localStorage 获取识别的文字并显示
+    const resultText = document.getElementById('resultText');
+    const recognizedText = localStorage.getItem('recognizedText');
+
+    if (recognizedText) {
+        resultText.textContent = recognizedText;
+    } else {
+        resultText.textContent = '无法获取识别结果。';
+    }
+</script>
 
 </body>
 </html>
