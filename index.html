@@ -36,8 +36,8 @@
 
         /* 四个小按钮样式 */
         .choiceButton {
-            width: 30px;
-            height: 30px;
+            width: 35px;
+            height: 35px;
             border-radius: 50%;
             margin: 20px;
             cursor: pointer;
@@ -75,8 +75,9 @@
 
     // 更新识别显示的文字，并存储选择的文字
     function setText(text) {
-        localStorage.setItem('selectedText', text);  // 将选择的文本存储到localStorage
-        recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
+        // 将选择的文本存储到localStorage并立即更新页面
+        localStorage.setItem('selectedText', text);  
+        recognizedTextDiv.innerHTML = `<h3>选择的文字：</h3><p>${text}</p>`;
     }
 
     // 图像预处理：灰度化 + 二值化
