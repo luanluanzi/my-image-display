@@ -3,39 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display Recognized Text</title>
+    <title>拍摄或上传图片并识别英文手写文字</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-
         #recognizedText {
             margin-top: 20px;
             white-space: pre-wrap;
             word-wrap: break-word;
+        }
+
+        #loading {
+            display: none;
             font-size: 18px;
+            color: #007BFF;
+            margin-top: 10px;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        /* 新按钮样式 */
+        #nextPageButton {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #nextPageButton:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
-<h1>显示识别的文字</h1>
+<h1>拍摄或上传图片并识别英文手写文字</h1>
 
-<!-- 显示OCR识别的文字 -->
+<!-- 普通图片显示 -->
+<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" alt="普通图片"/>
+
+<!-- 可点击图片，拍照并进行OCR -->
+<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="点击拍照" style="cursor:pointer;"/>
+
+<!-- 上传图片按钮 -->
+<input type="file" accept="image/*" id="imageInput" capture="camera" />
+
+<!-- 识别出的文字 -->
 <div id="recognizedText"></div>
 
-<script>
-    // 从 localStorage 获取第一个页面的 OCR 结果
-    const ocrContent = localStorage.getItem('ocrContent');
+<!-- 加载状态 -->
+<div id="loading">识别中，请稍等...</div>
 
-    // 如果 OCR 结果存在，显示它
-    if (ocrContent) {
-        document.getElementById('recognizedText').innerHTML = `<h3>识别的文字：</h3><p>${ocrContent}</p>`;
-    } else {
-        document.getElementById('recognizedText').innerHTML = `<h3>没有找到识别的文字</h3>`;
+<!-- 初始的按钮图片，点击后跳转的按钮 -->
+<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300" alt="占位按钮" style="display:none; cursor:pointer;"/>
+
+<script>
+    const imageInput = document.getElementById('imageInput');
+    const clickableImage = document.getElementById('clickableImage');
+    const staticImage = document.getElementById('staticImage');
+    const nextPageButton = document.getElementById('nextPageButton');
+    const recognizedTextDiv = document.getElementById('recognizedText');
+    const loadingDiv = document.getElementById('loading');
+
+    // 点击可点击的图片触发拍照/上传
+    clickableImage.addEventListener('click', function() {
+        imageInput.click();
+    });
+
+    // 图像预处理：灰度化 + 二值化
+    function preprocessImage(imageData) {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+        img.src = imageData;
+
+        img.onload = function () {
+            // 设置 canvas 尺寸为图片大小
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // 绘制原始图片
+            ctx.drawImage(img, 0, 0);
+
+            // 转为灰度图
+            const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const data = imgData.data;
+
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+
+                // 灰度算法: 用加权平均法获得灰度值
+                const gray = 0.3 * r + 0.59 * g + 0.11 * b;
+
+                // 将每个像素值改为灰度值
+                data[i] = data[i + 1] = data[i + 2] = gray;
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+            
+            // 再进行二值化处理
+            for (let i = 0; i < data.length; i += 4) {
+                const gray = data[i];
+                const threshold = 128; // 可调整的阈值
+                const color = gray > threshold ? 255 : 0; // 白色或黑色
+                data[i] = data[i + 1] = data[i + 2] = color;
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+
+            // 返回处理后的图像数据
+            const processedImage = canvas.toDataURL();
+            recognizeText(processedImage);
+        };
     }
+
+    // 使用 Tesseract.js 进行 OCR 识别
+    function recognizeText(imageData) {
+        loadingDiv.style.display = "block";
+        recognizedTextDiv.innerHTML = ""; // 清空之前的文字
+
+        Tesseract.recognize(
+            imageData,
+            'eng+handwriting',  // 使用手写模型
+            {
+                logger: (m) => console.log(m),
+                tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+                preserve_interword_spaces: true
+            }
+        ).then(({ data: { text } }) => {
+            loadingDiv.style.display = "none"; // 隐藏加载状态
+            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
+
+            // 将识别的文字保存到 localStorage
+            localStorage.setItem('ocrContent', text);
+        }).catch(err => {
+            loadingDiv.style.display = "none"; // 隐藏加载状态
+            recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
+            console.error('识别失败:', err);
+        }).finally(() => {
+            // 无论识别成功与否，显示跳转按钮
+            nextPageButton.style.display = "block";
+        });
+    }
+
+    // 当选择图片后，显示预览并进行OCR识别
+    imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+            // 显示上传的图片
+            staticImage.src = e.target.result;
+            staticImage.style.display = "block";
+
+            // 进行图像预处理并识别文字
+            preprocessImage(e.target.result);
+        };
+
+        if (file) {
+            reader.readAsDataURL(file);  // 读取图片为Data URL
+        }
+    });
+
+    // 点击更换后的按钮跳转到第二个页面
+    nextPageButton.addEventListener('click', function() {
+        window.location.href = 'second-page.html';  // 跳转到第二个页面
+    });
 </script>
 
 </body>
