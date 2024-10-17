@@ -3,19 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>识别结果页面</title>
+    <title>第三页 - 显示信息</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            color: #2c3e50;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .content h3 {
+            color: #16a085;
+        }
+
+        .content p {
+            font-size: 18px;
+            color: #34495e;
+        }
+    </style>
 </head>
 <body>
 
-<h2>识别结果</h2>
+<h2>第三页 - 显示来自第二页和第一页的内容</h2>
 
-<!-- 显示识别的文字 -->
-<div id="recognizedTextDisplay"></div>
+<div class="content">
+    <h3>第二页输入框获取的内容：</h3>
+    <p id="inputContent">加载中...</p> <!-- 第二页输入框的内容 -->
+
+    <h3>第一页识别的文字：</h3>
+    <p id="ocrContent">加载中...</p> <!-- 第一个页面识别的文字 -->
+</div>
 
 <script>
-    // 假设你将识别的文字存储在 localStorage 中
-    const recognizedText = localStorage.getItem('recognizedText');
-    document.getElementById('recognizedTextDisplay').innerHTML = `<p>${recognizedText}</p>`;
+    // 获取从 localStorage 中存储的数据
+    const inputContent = localStorage.getItem('inputContent');  // 第二页输入框的内容
+    const ocrContent = localStorage.getItem('ocrContent');  // 第一个页面识别的文字
+
+    // 在页面中显示内容
+    document.getElementById('inputContent').innerHTML = inputContent || '没有输入内容';
+    document.getElementById('ocrContent').innerHTML = ocrContent || '没有识别到文字';
 </script>
 
 </body>
