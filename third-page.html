@@ -11,7 +11,7 @@
         }
         .container {
             position: relative;
-            width: 100px;
+            width: 300px;
             margin: 0 auto;
         }
         .text-overlay {
@@ -20,12 +20,14 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 24px;
-            color: black;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
             padding: 10px;
             border-radius: 5px;
         }
         .background-image {
             width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -39,20 +41,21 @@
 </div>
 
 <script>
-    // 从 localStorage 获取输入的用户名（页面2的输入内容）
-    const userName = localStorage.getItem('inputField') || 'Unnamed';
+    // 从 localStorage 获取页面2的输入框内容
+    const userName = localStorage.getItem('userName') || 'Unnamed';
     
-    // 从 localStorage 获取页面1选择的按钮索引
+    // 从 localStorage 获取页面1选择的按钮文本和按钮索引
+    const selectedText = localStorage.getItem('ocrContent') || 'Spice is a memory of my hometown';
     const selectedButtonIndex = localStorage.getItem('selectedButtonIndex') || '0';
 
-    // 显示页面2输入的名字和页面1的按钮文本
-    document.getElementById('displayText').textContent = `${userName}`;
+    // 显示页面2的输入和页面1的选择文本
+    document.getElementById('displayText').textContent = `${userName} - ${selectedText}`;
 
-    // 根据页面1的按钮选择决定背景图片
+    // 根据按钮选择的索引显示对应的背景图片
     const backgroundImage = document.getElementById('backgroundImage');
     switch (parseInt(selectedButtonIndex)) {
         case 0:
-            backgroundImage.src = https://s3.bmp.ovh/imgs/2024/10/17/3978abc833e2dff5.png'; // 第一个按钮对应的图片
+            backgroundImage.src = 'https://s3.bmp.ovh/imgs/2024/10/17/3978abc833e2dff5.png'; // 第一个按钮对应的图片
             break;
         case 1:
             backgroundImage.src = 'https://s3.bmp.ovh/imgs/2024/10/17/35d1e2d64e5bf046.png'; // 第二个按钮对应的图片
