@@ -73,11 +73,9 @@
 
     clickableImage.addEventListener('click', () => imageInput.click());
 
-    // 更新识别显示的文字，并存储选择的文字
+    // 只保存选择的文本到 localStorage，而不更新界面显示
     function setText(text) {
-        // 将选择的文本存储到localStorage并立即更新页面
-        localStorage.setItem('selectedText', text);  
-        recognizedTextDiv.innerHTML = `<h3>选择的文字：</h3><p>${text}</p>`;
+        localStorage.setItem('selectedText', text);  // 只存储文本，不显示
     }
 
     // 图像预处理：灰度化 + 二值化
