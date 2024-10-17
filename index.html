@@ -60,7 +60,7 @@
     <button class="choiceButton" style="background-color: #8AD796;" onclick="setText('Unable to handle spicy food')"></button>
 </div>
 
-<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" alt="普通图片"/>
+<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/17/09e530c3a47e03a9.png" width="300" alt="普通图片"/>
 <img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="点击拍照" style="cursor:pointer;"/>
 <input type="file" accept="image/*" id="imageInput" capture="camera" />
 <div id="recognizedText"></div>
@@ -77,12 +77,13 @@
 
     clickableImage.addEventListener('click', () => imageInput.click());
 
-    // 更新识别显示的文字
+    // 更新识别显示的文字，并存储选择的文字
     function setText(text) {
+        localStorage.setItem('selectedText', text);  // 将选择的文本存储到localStorage
         recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
-        localStorage.setItem('ocrContent', text);  // 保存文本
     }
 
+    // 图像预处理：灰度化 + 二值化
     function preprocessImage(imageData) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -115,6 +116,7 @@
         };
     }
 
+    // 使用 Tesseract.js 进行 OCR 识别
     function recognizeText(imageData) {
         loadingDiv.style.display = "block";
         recognizedTextDiv.innerHTML = "";
@@ -124,10 +126,14 @@
             tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
             preserve_interword_spaces: true
         })
-        .then(() => {
+        .then(({ data: { text } }) => {
             loadingDiv.style.display = "none";
-            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>Spice is a memory of my hometown</p>`;
-            localStorage.setItem('ocrContent', 'Spice is a memory of my hometown');
+
+            // 如果识别到的文字为空，则显示选择的按钮文本
+            const selectedText = localStorage.getItem('selectedText') || 'Spice is a memory of my hometown';
+            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${selectedText}</p>`;
+
+            localStorage.setItem('ocrContent', selectedText); // 保存最终显示的文本
         })
         .catch(err => {
             loadingDiv.style.display = "none";
@@ -139,6 +145,7 @@
         });
     }
 
+    // 处理用户上传的图片
     imageInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -152,6 +159,7 @@
         if (file) reader.readAsDataURL(file);
     });
 
+    // 点击跳转按钮进入第二个页面
     nextPageButton.addEventListener('click', function() {
         window.location.href = 'second-page.html';
     });
