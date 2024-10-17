@@ -61,8 +61,8 @@
 <!-- 加载状态 -->
 <div id="loading">识别中，请稍等...</div>
 
-<!-- 重新上传按钮 -->
-<button id="retryButton" class="button" style="display:none;">重新上传图片</button>
+<!-- 重新拍照按钮 -->
+<button id="retryButton" class="button" style="display:none;">重新拍照</button>
 
 <script>
     const imageInput = document.getElementById('imageInput');
@@ -111,7 +111,7 @@
                 // 显示识别的文字
                 if (text.trim() === '') {
                     recognizedTextDiv.innerHTML = `<h3>识别结果：</h3><p>未能识别出文字，请尝试清晰的图片。</p>`;
-                    retryButton.style.display = 'block'; // 显示重新上传按钮
+                    retryButton.style.display = 'block'; // 显示重新拍照按钮
                 } else {
                     recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
                 }
@@ -119,7 +119,7 @@
                 // 错误处理
                 loadingDiv.style.display = 'none';
                 recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
-                retryButton.style.display = 'block'; // 显示重新上传按钮
+                retryButton.style.display = 'block'; // 显示重新拍照按钮
                 console.error(err);
             });
         };
@@ -134,13 +134,13 @@
         window.location.href = 'third-page.html';  // 跳转到页面3
     });
 
-    // 重新上传图片按钮
+    // 重新拍照按钮
     retryButton.addEventListener('click', function() {
         recognizedTextDiv.innerHTML = ''; // 清空已识别的文字
         imageInput.value = ''; // 清空文件选择框
         image2.style.display = 'block'; // 恢复原图片2
         newImage2.style.display = 'none'; // 隐藏新的图片2
-        retryButton.style.display = 'none'; // 隐藏重新上传按钮
+        retryButton.style.display = 'none'; // 隐藏重新拍照按钮
     });
 </script>
 
