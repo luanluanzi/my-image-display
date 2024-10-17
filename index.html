@@ -39,7 +39,6 @@
 
         /* 新的按钮样式 */
         #retryButton {
-            display: none;
             padding: 10px 20px;
             background-color: #28a745;
             color: white;
@@ -47,6 +46,7 @@
             cursor: pointer;
             border-radius: 5px;
             font-size: 16px;
+            margin-top: 20px;
         }
 
         #retryButton:hover {
@@ -108,7 +108,7 @@
 
             // 显示加载状态
             loadingDiv.style.display = 'block';
-            retryButton.style.display = 'none'; // 隐藏重新上传按钮
+            retryButton.style.display = 'block'; // 始终显示重新拍照按钮
 
             // 进行英文文字识别
             Tesseract.recognize(
@@ -124,17 +124,11 @@
                 loadingDiv.style.display = 'none';
 
                 // 显示识别的文字
-                if (text.trim() === '') {
-                    recognizedTextDiv.innerHTML = `<h3>识别结果：</h3><p>未能识别出文字，请尝试清晰的图片。</p>`;
-                    retryButton.style.display = 'block'; // 显示重新拍照按钮
-                } else {
-                    recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
-                }
+                recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
             }).catch((err) => {
                 // 错误处理
                 loadingDiv.style.display = 'none';
                 recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
-                retryButton.style.display = 'block'; // 显示重新拍照按钮
                 console.error(err);
             });
         };
