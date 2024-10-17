@@ -3,153 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>图片上传和文字识别</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
-    <style>
-        #recognizedText {
-            margin-top: 20px;
-            white-space: pre-wrap; /* 保持文本格式 */
-            word-wrap: break-word;
-        }
-
-        #loading {
-            display: none;
-            font-size: 18px;
-            color: #007BFF;
-            margin-top: 10px;
-        }
-
-        .button {
-            padding: 10px 20px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        #imageInput {
-            display: none; /* 隐藏上传框 */
-        }
-
-        /* 新的按钮样式 */
-        #retryButton {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        #retryButton:hover {
-            background-color: #218838;
-        }
-    </style>
+    <title>拍摄照片并跳转</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
 </head>
 <body>
 
-<h2>图片上传和文字识别</h2>
+<h1>拍摄或上传图片并识别英文文字</h1>
 
-<!-- 图片1，初始显示 -->
-<img id="image1" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" alt="图片1" />
+<!-- 普通图片显示 -->
+<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300"  alt="普通图片"/>
 
-<!-- 图片2，点击上传图片 -->
-<img id="image2" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="图片2" style="cursor:pointer;" />
+<!-- 可点击图片，拍照并进行OCR -->
+<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300"  alt="点击拍照" style="cursor:pointer;"/>
 
-<!-- 文件上传输入框 -->
-<input type="file" accept="image/*" id="imageInput" capture="camera" />
+<!-- 上传图片按钮 -->
+<input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;"/>
 
-<!-- 新的图片2（上传后替换） -->
-<img id="newImage2" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300" alt="点击跳转按钮" style="display:none; cursor:pointer;" />
-
-<!-- 识别出的文字 -->
-<div id="recognizedText"></div>
-
-<!-- 加载状态 -->
-<div id="loading">识别中，请稍等...</div>
-
-<!-- 重新拍照按钮 -->
-<button id="retryButton" class="button">重新拍照</button>
+<!-- 初始的按钮图片，点击后跳转的按钮 -->
+<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300"  alt="占位按钮" style="display:none; cursor:pointer;"/>
 
 <script>
     const imageInput = document.getElementById('imageInput');
-    const image1 = document.getElementById('image1');
-    const image2 = document.getElementById('image2');
-    const newImage2 = document.getElementById('newImage2');
-    const recognizedTextDiv = document.getElementById('recognizedText');
-    const loadingDiv = document.getElementById('loading');
-    const retryButton = document.getElementById('retryButton');
+    const clickableImage = document.getElementById('clickableImage');
+    const staticImage = document.getElementById('staticImage');
+    const nextPageButton = document.getElementById('nextPageButton');
 
-    // 点击图片2触发上传图片
-    image2.addEventListener('click', function() {
+    // 点击可点击的图片触发拍照/上传
+    clickableImage.addEventListener('click', function() {
         imageInput.click();
     });
 
-    // 上传图片后更新图片1和图片2
+    // 当选择图片后，显示预览并进行OCR识别
     imageInput.addEventListener('change', function(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
 
         reader.onload = function(e) {
-            // 替换图片1为上传的图片
-            image1.src = e.target.result;
+            // 显示上传的图片
+            staticImage.src = e.target.result;
+            staticImage.style.display = "block";
 
-            // 替换图片2为新的可点击按钮
-            image2.style.display = 'none'; // 隐藏原图片2
-            newImage2.style.display = 'block'; // 显示新的图片2
-
-            // 显示加载状态
-            loadingDiv.style.display = 'block';
-            retryButton.style.display = 'block'; // 始终显示重新拍照按钮
-
-            // 进行英文文字识别
+            // 使用 Tesseract.js 进行 OCR 识别，识别英文
             Tesseract.recognize(
                 e.target.result,
-                'eng', // 使用英文识别
+                'eng',  // 使用英文模型
                 {
-                    logger: (m) => console.log(m), // 控制台显示进度
-                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // 强制只识别英文和数字
-                    preserve_interword_spaces: true, // 保留单词间距
+                    logger: (m) => console.log(m)
                 }
             ).then(({ data: { text } }) => {
-                // 隐藏加载状态
-                loadingDiv.style.display = 'none';
+                console.log('识别结果:', text); // 输出识别的英文文字
 
-                // 显示识别的文字
-                recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
-            }).catch((err) => {
-                // 错误处理
-                loadingDiv.style.display = 'none';
-                recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
-                console.error(err);
+                // 替换上传图片按钮为新的按钮
+                nextPageButton.src = 'https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png';  // 替换为新的按钮图片
+                nextPageButton.style.display = "block";  // 显示按钮
+            }).catch(err => {
+                console.error('识别失败:', err);
             });
         };
 
         if (file) {
-            reader.readAsDataURL(file);  // 读取上传的图片文件
+            reader.readAsDataURL(file);  // 读取图片为Data URL
         }
     });
 
-    // 点击新的图片2按钮跳转到页面3
-    newImage2.addEventListener('click', function() {
-        window.location.href = 'third-page.html';  // 跳转到页面3
-    });
-
-    // 重新拍照按钮
-    retryButton.addEventListener('click', function() {
-        recognizedTextDiv.innerHTML = ''; // 清空已识别的文字
-        imageInput.value = ''; // 清空文件选择框
-        image2.style.display = 'block'; // 恢复原图片2
-        newImage2.style.display = 'none'; // 隐藏新的图片2
-        retryButton.style.display = 'none'; // 隐藏重新拍照按钮
+    // 点击更换后的按钮跳转到第二个页面
+    nextPageButton.addEventListener('click', function() {
+        window.location.href = 'second-page.html';  // 跳转到第二个页面
     });
 </script>
 
