@@ -49,10 +49,10 @@
 
 <!-- 选择按钮 -->
 <div>
-    <button class="choiceButton" style="background-color: #D8211E;" onclick="setText('Spice is ingrained in my bones')"></button>
-    <button class="choiceButton" style="background-color: #FF7C3F;" onclick="setText('A blend of pain and happiness')"></button>
-    <button class="choiceButton" style="background-color: #FFE279;" onclick="setText('Masking unpleasant tastes')"></button>
-    <button class="choiceButton" style="background-color: #8AD796;" onclick="setText('Unable to handle spicy food')"></button>
+    <button class="choiceButton" style="background-color: #D8211E;" onclick="setText('Spice is ingrained in my bones', 0)"></button>
+    <button class="choiceButton" style="background-color: #FF7C3F;" onclick="setText('A blend of pain and happiness', 1)"></button>
+    <button class="choiceButton" style="background-color: #FFE279;" onclick="setText('Masking unpleasant tastes', 2)"></button>
+    <button class="choiceButton" style="background-color: #8AD796;" onclick="setText('Unable to handle spicy food', 3)"></button>
 </div>
 
 <img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/17/26541624acdea77d.png" width="300" alt="普通图片"/>
@@ -72,9 +72,10 @@
 
     clickableImage.addEventListener('click', () => imageInput.click());
 
-    // 只保存选择的文本到 localStorage，而不更新界面显示
-    function setText(text) {
-        localStorage.setItem('selectedText', text);  // 只存储文本，不显示
+    // 存储选择的按钮文本和按钮的索引
+    function setText(text, index) {
+        localStorage.setItem('selectedText', text);  // 存储文本
+        localStorage.setItem('selectedButtonIndex', index);  // 存储按钮索引
     }
 
     // 图像预处理：灰度化 + 二值化
