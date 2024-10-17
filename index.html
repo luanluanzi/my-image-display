@@ -3,130 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拍摄或上传图片并识别英文文字</title>
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
+    <title>Display Recognized Text</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
         #recognizedText {
             margin-top: 20px;
             white-space: pre-wrap;
             word-wrap: break-word;
-        }
-
-        #loading {
-            display: none;
             font-size: 18px;
-            color: #007BFF;
-            margin-top: 10px;
-        }
-
-        #imageInput {
-            display: none;
-        }
-
-        /* 新按钮样式 */
-        #nextPageButton {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
-        }
-
-        #nextPageButton:hover {
-            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
-<h1>拍摄或上传图片并识别英文文字</h1>
+<h1>显示识别的文字</h1>
 
-<!-- 普通图片显示 -->
-<img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" alt="普通图片"/>
-
-<!-- 可点击图片，拍照并进行OCR -->
-<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="点击拍照" style="cursor:pointer;"/>
-
-<!-- 上传图片按钮 -->
-<input type="file" accept="image/*" id="imageInput" capture="camera" />
-
-<!-- 识别出的文字 -->
+<!-- 显示OCR识别的文字 -->
 <div id="recognizedText"></div>
 
-<!-- 加载状态 -->
-<div id="loading">识别中，请稍等...</div>
-
-<!-- 初始的按钮图片，点击后跳转的按钮 -->
-<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300" alt="占位按钮" style="display:none; cursor:pointer;"/>
-
 <script>
-    const imageInput = document.getElementById('imageInput');
-    const clickableImage = document.getElementById('clickableImage');
-    const staticImage = document.getElementById('staticImage');
-    const nextPageButton = document.getElementById('nextPageButton');
-    const recognizedTextDiv = document.getElementById('recognizedText');
-    const loadingDiv = document.getElementById('loading');
+    // 从 localStorage 获取第一个页面的 OCR 结果
+    const ocrContent = localStorage.getItem('ocrContent');
 
-    // 点击可点击的图片触发拍照/上传
-    clickableImage.addEventListener('click', function() {
-        imageInput.click();
-    });
-
-    // 当选择图片后，显示预览并进行OCR识别
-    imageInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            // 显示上传的图片
-            staticImage.src = e.target.result;
-            staticImage.style.display = "block";
-
-            // 显示加载状态
-            loadingDiv.style.display = "block";
-            recognizedTextDiv.innerHTML = ""; // 清空之前的文字
-
-            // 使用 Tesseract.js 进行 OCR 识别，识别英文
-            Tesseract.recognize(
-                e.target.result,
-                'eng',  // 使用英文模型
-                {
-                    logger: (m) => console.log(m),
-                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // 只识别英文字符和数字
-                    preserve_interword_spaces: true, // 保持单词间的空格
-                }
-            ).then(({ data: { text } }) => {
-                // 隐藏加载状态
-                loadingDiv.style.display = "none";
-
-                // 显示识别的文字
-                recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${text}</p>`;
-
-                // 保存识别的文字到 localStorage
-                localStorage.setItem('ocrContent', text);
-
-                // 替换上传图片按钮为新的按钮
-                nextPageButton.style.display = "block";  // 显示跳转按钮
-            }).catch(err => {
-                // 错误处理
-                loadingDiv.style.display = "none";
-                recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
-                console.error('识别失败:', err);
-            });
-        };
-
-        if (file) {
-            reader.readAsDataURL(file);  // 读取图片为Data URL
-        }
-    });
-
-    // 点击更换后的按钮跳转到第二个页面
-    nextPageButton.addEventListener('click', function() {
-        window.location.href = 'second-page.html';  // 跳转到第二个页面
-    });
+    // 如果 OCR 结果存在，显示它
+    if (ocrContent) {
+        document.getElementById('recognizedText').innerHTML = `<h3>识别的文字：</h3><p>${ocrContent}</p>`;
+    } else {
+        document.getElementById('recognizedText').innerHTML = `<h3>没有找到识别的文字</h3>`;
+    }
 </script>
 
 </body>
