@@ -3,34 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>拍摄照片并识别文字</title>
+    <title>拍摄照片并跳转</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.4/dist/tesseract.min.js"></script>
 </head>
 <body>
 
-<h1>拍摄或上传图片并识别文字</h1>
+<h1>拍摄或上传图片</h1>
 
 <!-- 普通图片显示 -->
 <img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" height="300" alt="普通图片"/>
 
 <!-- 可点击图片，拍照并进行OCR -->
-<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png"alt="点击拍照" style="cursor:pointer;"/>
+<img id="clickableImage" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" alt="点击拍照" style="cursor:pointer;"/>
 
 <!-- 上传图片按钮 -->
 <input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;"/>
 
-<!-- 识别结果的容器，用于传递给下一页面 -->
-<p id="recognizedText" style="display:none;"></p>
-
-<!-- 下面的图片按钮，拍照后将会更换为可跳转的按钮 -->
-<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png"alt="占位按钮" style="display:none; cursor:pointer;"/>
+<!-- 初始的按钮图片 -->
+<img id="bottomButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" alt="占位按钮" style="cursor:pointer;"/>
 
 <script>
     const imageInput = document.getElementById('imageInput');
     const clickableImage = document.getElementById('clickableImage');
-    const recognizedText = document.getElementById('recognizedText');
     const staticImage = document.getElementById('staticImage');
-    const nextPageButton = document.getElementById('nextPageButton');
+    const bottomButton = document.getElementById('bottomButton');
 
     // 点击可点击的图片触发拍照/上传
     clickableImage.addEventListener('click', function() {
@@ -55,15 +51,13 @@
                     logger: (m) => console.log(m)
                 }
             ).then(({ data: { text } }) => {
-                recognizedText.textContent = text; // 保存识别的文字
-                recognizedText.style.display = "block"; // 确保文字可见
+                console.log('识别结果:', text);
 
-                // 替换下方的图片按钮
-                nextPageButton.src = 'next-page-button.jpg';  // 替换为新图片
-                nextPageButton.style.display = "block";  // 显示按钮
+                // 替换底部按钮图片
+                bottomButton.src = 'https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png';  // 将图片替换为新的按钮
+                bottomButton.style.display = "block";  // 确保按钮显示
             }).catch(err => {
-                recognizedText.textContent = '识别失败，请重试！';
-                console.error(err);
+                console.error('识别失败:', err);
             });
         };
 
@@ -72,11 +66,10 @@
         }
     });
 
-    // 点击更换后的按钮跳转到第二页面
-    nextPageButton.addEventListener('click', function() {
-        if (recognizedText.textContent) {
-            localStorage.setItem('recognizedText', recognizedText.textContent);  // 存储文字到localStorage
-            window.location.href = 'second-page.html';  // 跳转到第二页
+    // 点击更换后的按钮跳转到第二个页面
+    bottomButton.addEventListener('click', function() {
+        if (bottomButton.src.includes('next-page-button.jpg')) {
+            window.location.href = 'second-page.html';  // 跳转到第二个页面
         }
     });
 </script>
