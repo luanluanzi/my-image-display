@@ -8,7 +8,7 @@
 </head>
 <body>
 
-<h1>拍摄或上传图片</h1>
+<h1>拍摄或上传图片并识别英文文字</h1>
 
 <!-- 普通图片显示 -->
 <img id="staticImage" src="https://s3.bmp.ovh/imgs/2024/10/13/1ec76ac158879b26.jpg" width="300" height="300" alt="普通图片"/>
@@ -19,14 +19,14 @@
 <!-- 上传图片按钮 -->
 <input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;"/>
 
-<!-- 初始的按钮图片 -->
-<img id="bottomButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" alt="占位按钮" style="cursor:pointer;"/>
+<!-- 初始的按钮图片，点击后跳转的按钮 -->
+<img id="nextPageButton" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" alt="占位按钮" style="display:none; cursor:pointer;"/>
 
 <script>
     const imageInput = document.getElementById('imageInput');
     const clickableImage = document.getElementById('clickableImage');
     const staticImage = document.getElementById('staticImage');
-    const bottomButton = document.getElementById('bottomButton');
+    const nextPageButton = document.getElementById('nextPageButton');
 
     // 点击可点击的图片触发拍照/上传
     clickableImage.addEventListener('click', function() {
@@ -43,19 +43,19 @@
             staticImage.src = e.target.result;
             staticImage.style.display = "block";
 
-            // 使用 Tesseract.js 进行 OCR 识别
+            // 使用 Tesseract.js 进行 OCR 识别，识别英文
             Tesseract.recognize(
                 e.target.result,
-                'chi_sim',  // 使用简体中文模型
+                'eng',  // 使用英文模型
                 {
                     logger: (m) => console.log(m)
                 }
             ).then(({ data: { text } }) => {
-                console.log('识别结果:', text);
+                console.log('识别结果:', text); // 输出识别的英文文字
 
-                // 替换底部按钮图片
-                bottomButton.src = 'https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png';  // 将图片替换为新的按钮
-                bottomButton.style.display = "block";  // 确保按钮显示
+                // 替换上传图片按钮为新的按钮
+                nextPageButton.src = 'https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png';  // 替换为新的按钮图片
+                nextPageButton.style.display = "block";  // 显示按钮
             }).catch(err => {
                 console.error('识别失败:', err);
             });
@@ -67,10 +67,8 @@
     });
 
     // 点击更换后的按钮跳转到第二个页面
-    bottomButton.addEventListener('click', function() {
-        if (bottomButton.src.includes('next-page-button.jpg')) {
-            window.location.href = 'second-page.html';  // 跳转到第二个页面
-        }
+    nextPageButton.addEventListener('click', function() {
+        window.location.href = 'second-page.html';  // 跳转到第二个页面
     });
 </script>
 
