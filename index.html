@@ -37,6 +37,21 @@
             display: none; /* 隐藏上传框 */
         }
 
+        /* 新的按钮样式 */
+        #retryButton {
+            display: none;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #retryButton:hover {
+            background-color: #218838;
+        }
     </style>
 </head>
 <body>
@@ -62,7 +77,7 @@
 <div id="loading">识别中，请稍等...</div>
 
 <!-- 重新拍照按钮 -->
-<button id="retryButton" class="button" style="display:none;">重新拍照</button>
+<button id="retryButton" class="button">重新拍照</button>
 
 <script>
     const imageInput = document.getElementById('imageInput');
