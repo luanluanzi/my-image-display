@@ -33,17 +33,6 @@
             width: 300px;
             margin-top: 20px;
         }
-        /* 修改了按钮样式 */
-        #nextPageButton {
-            padding: 10px 20px;
-            color: white;
-            background-color: #007BFF;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-            font-size: 16px;
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -54,15 +43,12 @@
     <img src="https://s3.bmp.ovh/imgs/2024/10/13/0099c193ebe43e23.png" alt="Image Below Input" id="imageBelowInput">
 </div>
 
-<!-- 新增的按钮，用于提交输入内容并跳转到第三页 -->
-<button id="nextPageButton">Go to Third Page</button>
+<!-- 点击图片跳转到第三页 -->
+<img src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" class="clickable-image" onclick="goToThirdPage()">
 
 <script>
-    // 获取按钮元素
-    const nextPageButton = document.getElementById('nextPageButton');
-
-    // 点击按钮后跳转到第三页
-    nextPageButton.addEventListener('click', function() {
+    // 点击图片后跳转到第三页
+    function goToThirdPage() {
         // 获取输入框中的内容
         const inputValue = document.getElementById('inputField').value;
 
@@ -83,13 +69,7 @@
 
         // 跳转到第三页
         window.location.href = "third-page.html"; 
-    });
-
-    // 点击图片后也能跳转到第三页
-    const clickableImage = document.querySelector('.clickable-image');
-    clickableImage.addEventListener('click', function() {
-        nextPageButton.click(); // 触发按钮点击事件
-    });
+    }
 </script>
 
 </body>
