@@ -32,6 +32,11 @@
         .button:hover {
             background-color: #0056b3;
         }
+
+        #imageInput {
+            display: none; /* 隐藏上传框 */
+        }
+
     </style>
 </head>
 <body>
@@ -45,7 +50,7 @@
 <img id="image2" src="https://s3.bmp.ovh/imgs/2024/10/13/b517467a12dcbe73.png" width="300" alt="图片2" style="cursor:pointer;" />
 
 <!-- 文件上传输入框 -->
-<input type="file" accept="image/*" id="imageInput" capture="camera" style="display:none;" />
+<input type="file" accept="image/*" id="imageInput" capture="camera" />
 
 <!-- 新的图片2（上传后替换） -->
 <img id="newImage2" src="https://s3.bmp.ovh/imgs/2024/10/13/9fe6952ef0de2de1.png" width="300" alt="点击跳转按钮" style="display:none; cursor:pointer;" />
@@ -90,12 +95,12 @@
             loadingDiv.style.display = 'block';
             retryButton.style.display = 'none'; // 隐藏重新上传按钮
 
-            // 进行文字识别
+            // 进行英文文字识别
             Tesseract.recognize(
                 e.target.result,
-                'eng', // 识别英文
+                'eng', // 使用英文识别
                 {
-                    logger: (m) => console.log(m) // 可以在控制台查看进度
+                    logger: (m) => console.log(m) // 控制台显示进度
                 }
             ).then(({ data: { text } }) => {
                 // 隐藏加载状态
