@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上传并识别文字</title>
+    <title>图片上传和文字识别</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/dist/tesseract.min.js"></script>
     <style>
         #recognizedText {
@@ -100,7 +100,9 @@
                 e.target.result,
                 'eng', // 使用英文识别
                 {
-                    logger: (m) => console.log(m) // 控制台显示进度
+                    logger: (m) => console.log(m), // 控制台显示进度
+                    tessedit_char_whitelist: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789', // 强制只识别英文和数字
+                    preserve_interword_spaces: true, // 保留单词间距
                 }
             ).then(({ data: { text } }) => {
                 // 隐藏加载状态
