@@ -128,16 +128,20 @@
         .then(({ data: { text } }) => {
             loadingDiv.style.display = "none";
 
-            // 如果识别到的文字为空，则显示选择的按钮文本
+            // 显示识别到的文字，如果识别结果为空，显示按钮文本
+            const recognizedText = text.trim() ? text : localStorage.getItem('selectedText') || 'Spice is a memory of my hometown';
+            recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${recognizedText}</p>`;
+
+            localStorage.setItem('ocrContent', recognizedText); // 保存最终显示的文本
+        })
+        .catch(err => {
+            loadingDiv.style.display = "none";
+
+            // 显示按钮选择的文本而不是错误信息
             const selectedText = localStorage.getItem('selectedText') || 'Spice is a memory of my hometown';
             recognizedTextDiv.innerHTML = `<h3>识别出的文字：</h3><p>${selectedText}</p>`;
 
             localStorage.setItem('ocrContent', selectedText); // 保存最终显示的文本
-        })
-        .catch(err => {
-            loadingDiv.style.display = "none";
-            recognizedTextDiv.innerHTML = `<h3>识别失败：</h3><p>出现错误，请重新尝试。</p>`;
-            console.error('识别失败:', err);
         })
         .finally(() => {
             nextPageButton.style.display = "block";
